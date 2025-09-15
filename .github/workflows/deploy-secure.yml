@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: 🔧 Configuration des Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
 
       - name: 🔒 Injection des secrets (Configuration Supabase)
         run: |
@@ -60,20 +60,16 @@ jobs:
 
           echo "✅ Configuration créée avec succès"
 
-      - name: 📝 Modification de l'HTML pour charger la configuration
+      - name: 📝 Injection du script de configuration dans tous les HTML
         run: |
-          echo "🔧 Injection de la référence au fichier de configuration..."
-
-          # Ajouter la référence au fichier de config dans l'HTML principal
-          sed -i 's|<!-- PRIVATE_CONFIG_PLACEHOLDER -->|<script src="private-config.js"></script>|g' index.html
-          
-          # Ajouter la référence au fichier de config dans la page de test si elle existe
-          if [ -f test.html ]; then
-            sed -i 's|<!-- PRIVATE_CONFIG_PLACEHOLDER -->|<script src="private-config.js"></script>|g' test.html
-            echo "✅ test.html modifié pour utiliser la configuration sécurisée"
-          fi
-
-          echo "✅ HTML modifié pour utiliser la configuration sécurisée"
+          echo "🔧 Injection de la référence au fichier de configuration dans tous les fichiers HTML..."
+          for f in index.html app.html dashboard.html demo.html test.html; do
+            if [ -f "$f" ]; then
+              sed -i 's|<!-- PRIVATE_CONFIG_PLACEHOLDER -->|<script src="private-config.js"></script>|g' "$f"
+              echo "✅ $f modifié pour utiliser la configuration sécurisée"
+            fi
+          done
+          echo "✅ Tous les HTML principaux sont prêts pour la configuration sécurisée."
 
       - name: 🧹 Nettoyage des fichiers sensibles
         run: |
