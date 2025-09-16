@@ -522,7 +522,7 @@ function updateMoodList() {
                 </div>
                 <div class="mood-content">
                     <div class="mood-code">${codeSnippet}</div>
-                    ${humeur.commentaire ? `<div class="mood-comment">"${escapeHtml(humeur.commentaire)}"</div>` : ''}
+                    ${humeur.commentaire ? `<div class=\"mood-comment\">\"${escapeHtml(humeur.commentaire)}\"</div>` : ''}
                     <div class="mood-tags">
                         <span class="tag">${formatPreference(humeur.autre_preference)}</span>
                     </div>
@@ -534,7 +534,6 @@ function updateMoodList() {
 
 function generateCodeSnippet(humeur) {
     const langagePrefere = humeur.langage_prefere || 'javascript';
-    
     const templates = {
         javascript: `let humeur = "${humeur.emoji}";${humeur.commentaire ? ` // ${escapeHtml(humeur.commentaire)}` : ''}`,
         typescript: `const humeur: string = "${humeur.emoji}";${humeur.commentaire ? ` // ${escapeHtml(humeur.commentaire)}` : ''}`,
@@ -549,7 +548,6 @@ function generateCodeSnippet(humeur) {
         swift: `let humeur = "${humeur.emoji}"${humeur.commentaire ? ` // ${escapeHtml(humeur.commentaire)}` : ''}`,
         ruby: `humeur = "${humeur.emoji}"${humeur.commentaire ? ` # ${escapeHtml(humeur.commentaire)}` : ''}`
     };
-
     return templates[langagePrefere] || templates.javascript;
 }
 
@@ -588,7 +586,6 @@ function updateVisualization() {
 
     const emojiCounts = {};
     const langageCounts = {};
-    
     humeurs.forEach(humeur => {
         emojiCounts[humeur.emoji] = (emojiCounts[humeur.emoji] || 0) + 1;
         langageCounts[humeur.langage_prefere] = (langageCounts[humeur.langage_prefere] || 0) + 1;
