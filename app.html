@@ -70,69 +70,76 @@
                             <button type="button" class="emoji-btn" data-emoji="⚡" title="Éclair - Énergie électrique">⚡</button>
                             <button type="button" class="emoji-btn" data-emoji="🌟" title="Étoile - Brillant aujourd'hui">🌟</button>
                             <button type="button" class="emoji-btn" data-emoji="✨" title="Étincelles - Magique">✨</button>
-                            <!-- Fatigue et repos -->
-                            <button type="button" class="emoji-btn" data-emoji="😴" title="Endormi - Mode sieste">😴</button>
-                            <button type="button" class="emoji-btn" data-emoji="🥱" title="Bâillement - Fatigue">🥱</button>
-                            <button type="button" class="emoji-btn" data-emoji="☕" title="Café - Besoin de caféine">☕</button>
-                            <button type="button" class="emoji-btn" data-emoji="🛌" title="Lit - Envie de dormir">🛌</button>
-                            <button type="button" class="emoji-btn" data-emoji="💤" title="ZZZ - Assoupi">💤</button>
-                            <button type="button" class="emoji-btn" data-emoji="🧟" title="Zombie - Mode survie">🧟</button>
-                            <!-- Stress et défi -->
-                            <button type="button" class="emoji-btn" data-emoji="🤯" title="Explosion - Cerveau overload">🤯</button>
-                            <button type="button" class="emoji-btn" data-emoji="😰" title="Sueur - Stress intensif">😰</button>
-                            <button type="button" class="emoji-btn" data-emoji="🥵" title="Chaud - Pression maximum">🥵</button>
-                            <button type="button" class="emoji-btn" data-emoji="😓" title="Goutte sueur - Inquiet">😓</button>
-                            <button type="button" class="emoji-btn" data-emoji="🤪" title="Fou - Complètement perché">🤪</button>
-                            <button type="button" class="emoji-btn" data-emoji="�" title="À l'envers - Monde inversé">�</button>
-                            <!-- Confiance et cool -->
-                            <button type="button" class="emoji-btn" data-emoji="😎" title="Cool - Maître de l'univers">😎</button>
-                            <button type="button" class="emoji-btn" data-emoji="😏" title="Smirk - Je sais tout">😏</button>
-                            <button type="button" class="emoji-btn" data-emoji="�" title="Geek - Mode intellectuel">�</button>
-                            <button type="button" class="emoji-btn" data-emoji="😌" title="Zen - Serein">😌</button>
-                            <button type="button" class="emoji-btn" data-emoji="😊" title="Sourire - Bonne humeur">😊</button>
-                            <button type="button" class="emoji-btn" data-emoji="😁" title="Grand sourire - Joie">�</button>
-                            <!-- Réflexion et questionnement -->
-                            <button type="button" class="emoji-btn" data-emoji="🤔" title="Réflexion - Cogite">🤔</button>
-                            <button type="button" class="emoji-btn" data-emoji="🧐" title="Analyse poussée">🧐</button>
-                            <button type="button" class="emoji-btn" data-emoji="👀" title="Observation">👀</button>
-                            <button type="button" class="emoji-btn" data-emoji="🤨" title="Sceptique">🤨</button>
-                            <button type="button" class="emoji-btn" data-emoji="�" title="Grimace">�</button>
-                            <button type="button" class="emoji-btn" data-emoji="😕" title="Déçu">😕</button>
-                            <!-- Humour et légèreté -->
-                            <button type="button" class="emoji-btn" data-emoji="😅" title="Rire nerveux">😅</button>
-                            <button type="button" class="emoji-btn" data-emoji="�" title="Larmes de joie">�</button>
-                            <button type="button" class="emoji-btn" data-emoji="🤣" title="Rire aux éclats">🤣</button>
-                            <button type="button" class="emoji-btn" data-emoji="😄" title="Sourire éclatant">😄</button>
-                            <button type="button" class="emoji-btn" data-emoji="🥳" title="Fête">🥳</button>
-                            <button type="button" class="emoji-btn" data-emoji="🎉" title="Confettis">🎉</button>
-                            <!-- Tech et geek -->
-                            <button type="button" class="emoji-btn" data-emoji="💻" title="Laptop - Dev">💻</button>
-                            <button type="button" class="emoji-btn" data-emoji="🖥️" title="Desktop">🖥️</button>
-                            <button type="button" class="emoji-btn" data-emoji="⌨️" title="Clavier">⌨️</button>
-                            <button type="button" class="emoji-btn" data-emoji="🤖" title="Robot - IA">🤖</button>
-                            <button type="button" class="emoji-btn" data-emoji="👾" title="Alien - Gaming">👾</button>
-                            <button type="button" class="emoji-btn" data-emoji="🎯" title="Objectif">🎯</button>
-                            <!-- Spéciaux -->
-                            <button type="button" class="emoji-btn" data-emoji="�" title="Licorne">�</button>
-                            <button type="button" class="emoji-btn" data-emoji="🎭" title="Masques">🎭</button>
-                            <button type="button" class="emoji-btn" data-emoji="🎲" title="Hasard">🎲</button>
-                            <button type="button" class="emoji-btn" data-emoji="🌈" title="Arc-en-ciel">🌈</button>
-                            <button type="button" class="emoji-btn" data-emoji="🍕" title="Pizza">🍕</button>
-                            <button type="button" class="emoji-btn" data-emoji="🎸" title="Guitare">🎸</button>
-                        </div>
-                    </div>
+                            <script type="module">
+                                document.getElementById('year').textContent = new Date().getFullYear();
+                                // Synchroniser valeur cachée #language pour compat éventuelle
+                                const fav = document.getElementById('favoriteLanguage');
+                                const hiddenLang = document.getElementById('language');
+                                fav.addEventListener('change', () => hiddenLang.value = fav.value);
 
-                    <div class="form-group">
-                        <label for="favoriteLanguage">Mon langage préféré :</label>
-                        <select id="favoriteLanguage" required>
-                            <option value="">Choisis ton langage préféré</option>
-                            <option value="javascript">JavaScript</option>
-                            <option value="typescript">TypeScript</option>
-                            <option value="python">Python</option>
-                            <option value="java">Java</option>
-                            <option value="csharp">C#</option>
-                            <option value="php">PHP</option>
-                            <option value="cpp">C++</option>
+                                // --- Ambiance de l'entreprise en temps réel (attente config) ---
+                                function waitForConfig(cb, tries = 0) {
+                                    if (window.PRIVATE_CONFIG && window.PRIVATE_CONFIG.supabaseUrl && window.PRIVATE_CONFIG.supabaseAnonKey) {
+                                        cb(window.PRIVATE_CONFIG);
+                                    } else if (tries < 30) {
+                                        setTimeout(() => waitForConfig(cb, tries+1), 100);
+                                    } else {
+                                        document.getElementById('moodList').innerHTML = '<div class="loading"><p>❌ Impossible de charger la configuration Supabase.<br>Vérifiez le déploiement GitHub Pages.</p></div>';
+                                    }
+                                }
+
+                                waitForConfig(async (config) => {
+                                    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/esm/supabase.js');
+                                    const supabase = createClient(config.supabaseUrl, config.supabaseAnonKey);
+
+                                    function getDominantEmoji(humeurs) {
+                                        if (!humeurs.length) return null;
+                                        const freq = {};
+                                        humeurs.forEach(h => { freq[h.emoji] = (freq[h.emoji]||0)+1; });
+                                        return Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0];
+                                    }
+
+                                    function renderMoodList(humeurs) {
+                                        const moodList = document.getElementById('moodList');
+                                        if (!humeurs.length) {
+                                            moodList.innerHTML = `<div class="loading"><p>🤖 En attente des premiers codes humeur...</p><p style="font-size: 0.9em; margin-top: 10px; color: #666;">Partage ton humeur pour commencer !</p></div>`;
+                                            return;
+                                        }
+                                        const dominant = getDominantEmoji(humeurs);
+                                        const lastHumeurs = humeurs.slice(0, 8);
+                                        moodList.innerHTML = `
+                                            <div class="mood-summary" style="font-size:2.2rem; margin-bottom:1rem; text-align:center;">
+                                                Ambiance actuelle : <span style="font-size:2.5rem;">${dominant}</span>
+                                                <span style="font-size:1.1rem; color:#888;">(${humeurs.length} humeur${humeurs.length>1?'s':''})</span>
+                                            </div>
+                                            <div class="mood-feed" style="display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center;">
+                                                ${lastHumeurs.map(h=>`<div class='mood-bubble' style='background:#fff3; border-radius:1.5rem; padding:0.5rem 1.1rem; font-size:1.5rem; display:flex; align-items:center; gap:0.7rem; box-shadow:0 1px 4px #0001;'>
+                                                    <span>${h.emoji}</span> <span style='font-size:1rem; color:#333;'>${h.nom}</span>
+                                                </div>`).join('')}
+                                            </div>
+                                        `;
+                                    }
+
+                                    async function loadAndListenMoods() {
+                                        let { data: humeurs, error } = await supabase
+                                            .from('humeur')
+                                            .select('id, nom, emoji, created_at')
+                                            .order('created_at', { ascending: false });
+                                        if (!error) renderMoodList(humeurs);
+
+                                        supabase.channel('humeur_realtime')
+                                            .on('postgres_changes', { event: '*', schema: 'public', table: 'humeur' }, async () => {
+                                                let { data: humeurs, error } = await supabase
+                                                    .from('humeur')
+                                                    .select('id, nom, emoji, created_at')
+                                                    .order('created_at', { ascending: false });
+                                                if (!error) renderMoodList(humeurs);
+                                            })
+                                            .subscribe();
+                                    }
+                                    loadAndListenMoods();
+                                });
+                            </script>
                             <option value="rust">Rust</option>
                             <option value="go">Go</option>
                             <option value="kotlin">Kotlin</option>
@@ -257,9 +264,7 @@
     <script type="module">
         document.getElementById('year').textContent = new Date().getFullYear();
         // Synchroniser valeur cachée #language pour compat éventuelle
-        const fav = document.getElementById('favoriteLanguage');
-        const hiddenLang = document.getElementById('language');
-        fav.addEventListener('change', () => hiddenLang.value = fav.value);
+
 
         // --- Ambiance de l'entreprise en temps réel ---
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/esm/supabase.js';
