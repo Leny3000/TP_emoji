@@ -254,12 +254,68 @@
     <script src="private-config.js"></script>
     <!-- Client Supabase (utilisé via import dans main.js) -->
     <script type="module" src="main.js"></script>
-    <script>
+    <script type="module">
         document.getElementById('year').textContent = new Date().getFullYear();
         // Synchroniser valeur cachée #language pour compat éventuelle
         const fav = document.getElementById('favoriteLanguage');
         const hiddenLang = document.getElementById('language');
         fav.addEventListener('change', () => hiddenLang.value = fav.value);
+
+        // --- Ambiance de l'entreprise en temps réel ---
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/esm/supabase.js';
+        const config = window.PRIVATE_CONFIG || {};
+        const supabase = createClient(config.supabaseUrl, config.supabaseAnonKey);
+
+        // Fonction pour calculer l'emoji dominant
+        function getDominantEmoji(humeurs) {
+            if (!humeurs.length) return null;
+            const freq = {};
+            humeurs.forEach(h => { freq[h.emoji] = (freq[h.emoji]||0)+1; });
+            return Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0];
+        }
+
+        // Fonction d'affichage de l'ambiance
+        function renderMoodList(humeurs) {
+            const moodList = document.getElementById('moodList');
+            if (!humeurs.length) {
+                moodList.innerHTML = `<div class="loading"><p>🤖 En attente des premiers codes humeur...</p><p style="font-size: 0.9em; margin-top: 10px; color: #666;">Partage ton humeur pour commencer !</p></div>`;
+                return;
+            }
+            const dominant = getDominantEmoji(humeurs);
+            const lastHumeurs = humeurs.slice(0, 8);
+            moodList.innerHTML = `
+                <div class="mood-summary" style="font-size:2.2rem; margin-bottom:1rem; text-align:center;">
+                    Ambiance actuelle : <span style="font-size:2.5rem;">${dominant}</span>
+                    <span style="font-size:1.1rem; color:#888;">(${humeurs.length} humeur${humeurs.length>1?'s':''})</span>
+                </div>
+                <div class="mood-feed" style="display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center;">
+                    ${lastHumeurs.map(h=>`<div class='mood-bubble' style='background:#fff3; border-radius:1.5rem; padding:0.5rem 1.1rem; font-size:1.5rem; display:flex; align-items:center; gap:0.7rem; box-shadow:0 1px 4px #0001;'>
+                        <span>${h.emoji}</span> <span style='font-size:1rem; color:#333;'>${h.nom}</span>
+                    </div>`).join('')}
+                </div>
+            `;
+        }
+
+        // Charger et écouter les humeurs
+        async function loadAndListenMoods() {
+            let { data: humeurs, error } = await supabase
+                .from('humeur')
+                .select('id, nom, emoji, created_at')
+                .order('created_at', { ascending: false });
+            if (!error) renderMoodList(humeurs);
+
+            // Écoute temps réel
+            supabase.channel('humeur_realtime')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'humeur' }, async () => {
+                    let { data: humeurs, error } = await supabase
+                        .from('humeur')
+                        .select('id, nom, emoji, created_at')
+                        .order('created_at', { ascending: false });
+                    if (!error) renderMoodList(humeurs);
+                })
+                .subscribe();
+        }
+        loadAndListenMoods();
     </script>
 </body>
 </html>
