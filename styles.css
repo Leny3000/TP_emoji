@@ -95,7 +95,7 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #3ECF8E 0%, #2B7EC8 100%);
+    background: linear-gradient(135deg, #8f5be8 0%, #3ECF8E 100%);
     min-height: 100vh;
     padding: 20px;
     color: #333;
@@ -116,7 +116,7 @@ body {
 }
 
 .header h1 {
-    color: #3ECF8E;
+    color: #8f5be8;
     font-size: 2.5em;
     margin-bottom: 10px;
 }
@@ -192,7 +192,7 @@ body {
 .stat-number {
     font-size: 2em;
     font-weight: bold;
-    color: #3ECF8E;
+    color: #8f5be8;
     animation: countUp 0.5s ease;
 }
 
@@ -227,7 +227,7 @@ body {
 }
 
 .form-section h2 {
-    color: #3ECF8E;
+    color: #8f5be8;
     margin-bottom: 20px;
     font-size: 1.8em;
 }
@@ -287,13 +287,13 @@ input:focus, select:focus, textarea:focus {
 
 .emoji-btn:hover {
     transform: scale(1.1);
-    border-color: #3ECF8E;
-    box-shadow: 0 4px 12px rgba(62, 207, 142, 0.3);
+    border-color: #8f5be8;
+    box-shadow: 0 4px 12px rgba(143, 91, 232, 0.3);
 }
 
 .emoji-btn.selected {
-    border-color: #3ECF8E;
-    background: #f8fffc;
+    border-color: #8f5be8;
+    background: #f6f0ff;
     transform: scale(1.1);
     animation: selected 0.5s ease;
 }
@@ -305,7 +305,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .submit-btn {
-    background: linear-gradient(135deg, #3ECF8E 0%, #2B7EC8 100%);
+    background: linear-gradient(135deg, #8f5be8 0%, #3ECF8E 100%);
     color: white;
     border: none;
     padding: 15px 30px;
@@ -321,7 +321,7 @@ input:focus, select:focus, textarea:focus {
 
 .submit-btn:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(62, 207, 142, 0.4);
+    box-shadow: 0 8px 25px rgba(143, 91, 232, 0.25), 0 8px 25px rgba(62, 207, 142, 0.25);
 }
 
 .submit-btn:disabled {
@@ -347,7 +347,7 @@ input:focus, select:focus, textarea:focus {
 
 /* Zone d'affichage style réseaux sociaux */
 .display-section h2 {
-    color: #3ECF8E;
+    color: #8f5be8;
     margin-bottom: 20px;
     font-size: 1.8em;
     display: flex;
@@ -504,7 +504,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .language-tag {
-    background: linear-gradient(45deg, #3ECF8E, #2B7EC8);
+    background: linear-gradient(45deg, #8f5be8, #3ECF8E);
 }
 
 .hobby-tag {
@@ -673,7 +673,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 .mini-tag.lang {
-    background: linear-gradient(45deg, #3ECF8E, #2B7EC8);
+    background: linear-gradient(45deg, #8f5be8, #3ECF8E);
 }
 
 .mini-tag.pref {
