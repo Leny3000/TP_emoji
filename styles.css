@@ -239,27 +239,25 @@ body {
 }
 
 .form-section, .display-section {
-    background: rgba(255,255,255,0.22);
-    padding: 38px 30px 34px 30px;
-    border-radius: 32px;
-    box-shadow: 0 16px 48px 0 rgba(143,91,232,0.13), 0 2px 8px rgba(62,207,142,0.08);
-    transition: box-shadow 0.2s, transform 0.2s;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
     min-width: 320px;
     max-width: 520px;
     margin-bottom: 0;
     margin-top: 0;
     flex: 1 1 400px;
     position: relative;
-    backdrop-filter: blur(10px) saturate(1.1);
-    border: 1.5px solid rgba(255,255,255,0.22);
-    overflow: hidden;
+    border: none;
+    overflow: visible;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    background: rgba(255,255,255,0.18);
-    border-radius: 18px;
-    padding: 10px 0 8px 0;
-    box-shadow: 0 2px 8px rgba(143,91,232,0.07);
+    background: none;
+    border-radius: 0;
+    padding: 0 0 18px 0;
+    box-shadow: none;
 }
 .form-section:hover, .display-section:hover {
     box-shadow: 0 16px 40px rgba(0,0,0,0.16);
