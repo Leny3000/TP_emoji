@@ -48,207 +48,123 @@
             <div class="mood-visualization" id="moodVisualization"></div>
         </header>
 
-        <!-- <div class="main-content" style="display:flex; flex-wrap:wrap; gap:2rem; align-items:flex-start;"> -->
-            <!-- Formulaire principal -->
-            <div class="form-section">
-                <h2 style="margin-top:0;">📝 Code ton humeur</h2>
-                <form id="moodForm">
-                    <div class="form-group">
-                        <label for="studentName">Ton prénom :</label>
-                        <input type="text" id="studentName" required placeholder="Ex: Alex" maxlength="30">
+        <div class="main-content" style="display:flex; flex-wrap:wrap; gap:2rem; align-items:flex-start;">
+            <section class="main-sections">
+                <aside class="left-block">
+                    <h2>💻 Ambiance de l'entreprise</h2>
+                    <div class="mood-list social-feed" id="moodList">
+                        <div class="loading">
+                            <p>🤖 En attente des premiers codes humeur...</p>
+                            <p style="font-size: 0.9em; margin-top: 10px; color: #666;">Partage ton humeur pour commencer !</p>
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <label>Choisis ton emoji humeur :</label>
-                        <div class="emoji-selector">
-                            <!-- Jeu d'emojis complet (repris de demo.html) -->
-                            <!-- Énergie et motivation -->
-                            <button type="button" class="emoji-btn" data-emoji="🔥" title="Feu - Motivé à fond">🔥</button>
-                            <button type="button" class="emoji-btn" data-emoji="💪" title="Muscle - Prêt au combat">💪</button>
-                            <button type="button" class="emoji-btn" data-emoji="🚀" title="Fusée - Décollage immédiat">🚀</button>
-                            <button type="button" class="emoji-btn" data-emoji="⚡" title="Éclair - Énergie électrique">⚡</button>
-                            <button type="button" class="emoji-btn" data-emoji="🌟" title="Étoile - Brillant aujourd'hui">🌟</button>
-                            <button type="button" class="emoji-btn" data-emoji="✨" title="Étincelles - Magique">✨</button>
-                            <script type="module">
-                                document.getElementById('year').textContent = new Date().getFullYear();
-                                // Synchroniser valeur cachée #language pour compat éventuelle
-                                const fav = document.getElementById('favoriteLanguage');
-                                const hiddenLang = document.getElementById('language');
-                                fav.addEventListener('change', () => hiddenLang.value = fav.value);
-
-                                // --- Ambiance de l'entreprise en temps réel (attente config) ---
-                                function waitForConfig(cb, tries = 0) {
-                                    if (window.PRIVATE_CONFIG && window.PRIVATE_CONFIG.supabaseUrl && window.PRIVATE_CONFIG.supabaseAnonKey) {
-                                        cb(window.PRIVATE_CONFIG);
-                                    } else if (tries < 30) {
-                                        setTimeout(() => waitForConfig(cb, tries+1), 100);
-                                    } else {
-                                        document.getElementById('moodList').innerHTML = '<div class="loading"><p>❌ Impossible de charger la configuration Supabase.<br>Vérifiez le déploiement GitHub Pages.</p></div>';
-                                    }
-                                }
-
-                                waitForConfig(async (config) => {
-                                    const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/esm/supabase.js');
-                                    const supabase = createClient(config.supabaseUrl, config.supabaseAnonKey);
-
-                                    function getDominantEmoji(humeurs) {
-                                        if (!humeurs.length) return null;
-                                        const freq = {};
-                                        humeurs.forEach(h => { freq[h.emoji] = (freq[h.emoji]||0)+1; });
-                                        return Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0];
-                                    }
-
-                                    function renderMoodList(humeurs) {
-                                        const moodList = document.getElementById('moodList');
-                                        if (!humeurs.length) {
-                                            moodList.innerHTML = `<div class="loading"><p>🤖 En attente des premiers codes humeur...</p><p style="font-size: 0.9em; margin-top: 10px; color: #666;">Partage ton humeur pour commencer !</p></div>`;
-                                            return;
-                                        }
-                                        const dominant = getDominantEmoji(humeurs);
-                                        const lastHumeurs = humeurs.slice(0, 8);
-                                        moodList.innerHTML = `
-                                            <div class="mood-summary" style="font-size:2.2rem; margin-bottom:1rem; text-align:center;">
-                                                Ambiance actuelle : <span style="font-size:2.5rem;">${dominant}</span>
-                                                <span style="font-size:1.1rem; color:#888;">(${humeurs.length} humeur${humeurs.length>1?'s':''})</span>
-                                            </div>
-                                            <div class="mood-feed" style="display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center;">
-                                                ${lastHumeurs.map(h=>`<div class='mood-bubble' style='background:#fff3; border-radius:1.5rem; padding:0.5rem 1.1rem; font-size:1.5rem; display:flex; align-items:center; gap:0.7rem; box-shadow:0 1px 4px #0001;'>
-                                                    <span>${h.emoji}</span> <span style='font-size:1rem; color:#333;'>${h.nom}</span>
-                                                </div>`).join('')}
-                                            </div>
-                                        `;
-                                    }
-
-                                    async function loadAndListenMoods() {
-                                        let { data: humeurs, error } = await supabase
-                                            .from('humeur')
-                                            .select('id, nom, emoji, created_at')
-                                            .order('created_at', { ascending: false });
-                                        if (!error) renderMoodList(humeurs);
-
-                                        supabase.channel('humeur_realtime')
-                                            .on('postgres_changes', { event: '*', schema: 'public', table: 'humeur' }, async () => {
-                                                let { data: humeurs, error } = await supabase
-                                                    .from('humeur')
-                                                    .select('id, nom, emoji, created_at')
-                                                    .order('created_at', { ascending: false });
-                                                if (!error) renderMoodList(humeurs);
-                                            })
-                                            .subscribe();
-                                    }
-                                    loadAndListenMoods();
-                                });
-                            </script>
-                            <option value="rust">Rust</option>
-                            <option value="go">Go</option>
-                            <option value="kotlin">Kotlin</option>
-                            <option value="swift">Swift</option>
-                            <option value="ruby">Ruby</option>
-                        </select>
-                        <!-- Champ caché pour compat avec main.js (disable/enable #language) -->
-                        <input type="hidden" id="language" value="">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="otherPreference">Ma préférence tech :</label>
-                        <select id="otherPreference" required>
-                            <option value="">Choisis ta préférence</option>
-                            <optgroup label="🎮 Gaming & Fun">
-                                <option value="jeux-video">Jeux vidéo</option>
-                                <option value="streaming">Streaming</option>
-                                <option value="youtube">YouTube</option>
-                                <option value="twitch">Twitch</option>
-                            </optgroup>
-                            <optgroup label="🎨 Design & Créativité">
-                                <option value="design">Design graphique</option>
-                                <option value="photoshop">Photoshop</option>
-                                <option value="video-editing">Montage vidéo</option>
-                                <option value="ui-ux">UI/UX</option>
-                            </optgroup>
-                            <optgroup label="🎵 Musique & Audio">
-                                <option value="musique">Écouter de la musique</option>
-                                <option value="spotify">Spotify</option>
-                                <option value="production-musicale">Production musicale</option>
-                                <option value="podcasts">Podcasts</option>
-                            </optgroup>
-                            <optgroup label="🤖 Tech & IA">
-                                <option value="intelligence-artificielle">Intelligence Artificielle</option>
-                                <option value="chatgpt">ChatGPT</option>
-                                <option value="robotique">Robotique</option>
-                                <option value="blockchain">Blockchain</option>
-                            </optgroup>
-                            <optgroup label="📱 Mobile & Apps">
-                                <option value="apps-mobiles">Apps mobiles</option>
-                                <option value="tiktok">TikTok</option>
-                                <option value="instagram">Instagram</option>
-                                <option value="snapchat">Snapchat</option>
-                            </optgroup>
-                            <optgroup label="🏃 Sport & Activités">
-                                <option value="sport">Sport</option>
-                                <option value="fitness">Fitness</option>
-                                <option value="course">Course à pied</option>
-                                <option value="velo">Vélo</option>
-                            </optgroup>
-                            <optgroup label="🎬 Cinéma & Séries">
-                                <option value="netflix">Netflix</option>
-                                <option value="series">Séries TV</option>
-                                <option value="cinema">Cinéma</option>
-                                <option value="disney">Disney+</option>
-                            </optgroup>
-                            <optgroup label="📚 Apprentissage">
-                                <option value="lecture">Lecture</option>
-                                <option value="cours-en-ligne">Cours en ligne</option>
-                                <option value="langues">Apprendre des langues</option>
-                                <option value="tutoriels">Tutoriels</option>
-                            </optgroup>
-                            <optgroup label="🍔 Lifestyle">
-                                <option value="cuisine">Cuisine</option>
-                                <option value="voyage">Voyage</option>
-                                <option value="shopping">Shopping</option>
-                                <option value="nature">Nature</option>
-                            </optgroup>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="comment">Commentaire (optionnel) :</label>
-                        <input type="text" id="comment" placeholder="Clique pour des idées..." list="commentSuggestions" maxlength="100">
-                        <datalist id="commentSuggestions">
-                            <option value="prêt pour attaquer les projets">
-                            <option value="besoin d'un deuxième café">
-                            <option value="cerveau en surchauffe">
-                            <option value="easy peasy lemon squeezy">
-                            <option value="mode réflexion intense">
-                            <option value="je fais semblant de comprendre">
-                            <option value="404 motivation not found">
-                            <option value="humeur de licorne cosmique">
-                            <option value="while(motivation) { code(); }">
-                            <option value="git commit -m 'nouvelle année'">
-                            <option value="printf('hello world');">
-                            <option value="sudo apt install motivation">
-                            <option value="import bonheur from 'vacances'">
-                            <option value="let humeur = 'géniale'">
-                            <option value="humeur = 'au top'">
-                            <option value="feeling like a coding wizard">
-                            <option value="mode ninja developer activated">
-                        </datalist>
-                    </div>
-
-                    <button type="submit" class="submit-btn" id="submitBtn">Envoyer mon code humeur ! 🚀</button>
-                </form>
-                <p style="font-size:.75rem;color:#666; margin-top:1rem;">Raccourci enseignant : Ctrl + Shift + A</p>
-            <!-- </div> -->
-
-            <!-- Affichage temps réel -->
-            <div class="display-section">
-                <h2 style="margin-top:0;">💻 Ambiance de l'entreprise</h2>
-                <div class="mood-list social-feed" id="moodList">
-                    <div class="loading">
-                        <p>🤖 En attente des premiers codes humeur...</p>
-                        <p style="font-size: 0.9em; margin-top: 10px; color: #666;">Partage ton humeur pour commencer !</p>
-                    </div>
-                </div>
-            </div>
+                </aside>
+                <aside class="right-block">
+                    <h2>📝 Code ton humeur</h2>
+                    <form id="moodForm">
+                        <div class="form-group">
+                            <label for="studentName">Ton prénom :</label>
+                            <input type="text" id="studentName" required placeholder="Ex: Alex" maxlength="30">
+                        </div>
+                        <div class="form-group">
+                            <label>Choisis ton emoji humeur :</label>
+                            <div class="emoji-selector">
+                                <button type="button" class="emoji-btn" data-emoji="🔥" title="Feu - Motivé à fond">🔥</button>
+                                <button type="button" class="emoji-btn" data-emoji="💪" title="Muscle - Prêt au combat">💪</button>
+                                <button type="button" class="emoji-btn" data-emoji="🚀" title="Fusée - Décollage immédiat">🚀</button>
+                                <button type="button" class="emoji-btn" data-emoji="⚡" title="Éclair - Énergie électrique">⚡</button>
+                                <button type="button" class="emoji-btn" data-emoji="🌟" title="Étoile - Brillant aujourd'hui">🌟</button>
+                                <button type="button" class="emoji-btn" data-emoji="✨" title="Étincelles - Magique">✨</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="otherPreference">Ma préférence tech :</label>
+                            <select id="otherPreference" required>
+                                <option value="">Choisis ta préférence</option>
+                                <optgroup label="🎮 Gaming & Fun">
+                                    <option value="jeux-video">Jeux vidéo</option>
+                                    <option value="streaming">Streaming</option>
+                                    <option value="youtube">YouTube</option>
+                                    <option value="twitch">Twitch</option>
+                                </optgroup>
+                                <optgroup label="🎨 Design & Créativité">
+                                    <option value="design">Design graphique</option>
+                                    <option value="photoshop">Photoshop</option>
+                                    <option value="video-editing">Montage vidéo</option>
+                                    <option value="ui-ux">UI/UX</option>
+                                </optgroup>
+                                <optgroup label="🎵 Musique & Audio">
+                                    <option value="musique">Écouter de la musique</option>
+                                    <option value="spotify">Spotify</option>
+                                    <option value="production-musicale">Production musicale</option>
+                                    <option value="podcasts">Podcasts</option>
+                                </optgroup>
+                                <optgroup label="🤖 Tech & IA">
+                                    <option value="intelligence-artificielle">Intelligence Artificielle</option>
+                                    <option value="chatgpt">ChatGPT</option>
+                                    <option value="robotique">Robotique</option>
+                                    <option value="blockchain">Blockchain</option>
+                                </optgroup>
+                                <optgroup label="📱 Mobile & Apps">
+                                    <option value="apps-mobiles">Apps mobiles</option>
+                                    <option value="tiktok">TikTok</option>
+                                    <option value="instagram">Instagram</option>
+                                    <option value="snapchat">Snapchat</option>
+                                </optgroup>
+                                <optgroup label="🏃 Sport & Activités">
+                                    <option value="sport">Sport</option>
+                                    <option value="fitness">Fitness</option>
+                                    <option value="course">Course à pied</option>
+                                    <option value="velo">Vélo</option>
+                                </optgroup>
+                                <optgroup label="🎬 Cinéma & Séries">
+                                    <option value="netflix">Netflix</option>
+                                    <option value="series">Séries TV</option>
+                                    <option value="cinema">Cinéma</option>
+                                    <option value="disney">Disney+</option>
+                                </optgroup>
+                                <optgroup label="📚 Apprentissage">
+                                    <option value="lecture">Lecture</option>
+                                    <option value="cours-en-ligne">Cours en ligne</option>
+                                    <option value="langues">Apprendre des langues</option>
+                                    <option value="tutoriels">Tutoriels</option>
+                                </optgroup>
+                                <optgroup label="🍔 Lifestyle">
+                                    <option value="cuisine">Cuisine</option>
+                                    <option value="voyage">Voyage</option>
+                                    <option value="shopping">Shopping</option>
+                                    <option value="nature">Nature</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="comment">Commentaire (optionnel) :</label>
+                            <input type="text" id="comment" placeholder="Clique pour des idées..." list="commentSuggestions" maxlength="100">
+                            <datalist id="commentSuggestions">
+                                <option value="prêt pour attaquer les projets">
+                                <option value="besoin d'un deuxième café">
+                                <option value="cerveau en surchauffe">
+                                <option value="easy peasy lemon squeezy">
+                                <option value="mode réflexion intense">
+                                <option value="je fais semblant de comprendre">
+                                <option value="404 motivation not found">
+                                <option value="humeur de licorne cosmique">
+                                <option value="while(motivation) { code(); }">
+                                <option value="git commit -m 'nouvelle année'">
+                                <option value="printf('hello world');">
+                                <option value="sudo apt install motivation">
+                                <option value="import bonheur from 'vacances'">
+                                <option value="let humeur = 'géniale'">
+                                <option value="humeur = 'au top'">
+                                <option value="feeling like a coding wizard">
+                                <option value="mode ninja developer activated">
+                            </datalist>
+                        </div>
+                        <button type="submit" class="submit-btn" id="submitBtn">Envoyer mon code humeur ! 🚀</button>
+                    </form>
+                    <p style="font-size:.75rem;color:#666; margin-top:1rem;">Raccourci enseignant : Ctrl + Shift + A</p>
+                </aside>
+            </section>
         </div>
 
         <!-- Panneau admin caché injecté dynamiquement (hiddenAdminPanel) -->
